@@ -19,10 +19,11 @@
 #ifdef RT_USING_SENSOR
 
 #if RT_VER_NUM >= 0x50000
+    #include "drivers/sensor.h"
     #define rt_size_t rt_ssize_t
+#else
+    #include "sensor.h"
 #endif
-
-#include "drivers/sensor.h"
 
 struct dht11_device
 {
