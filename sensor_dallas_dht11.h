@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2018, RT-Thread Development Team
+ * Copyright (c) 2006-2024, RT-Thread Development Team
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -7,17 +7,22 @@
  * Date           Author          Notes
  * 2019-08-01     LuoGong         the first version.
  * 2019-08-15     MurphyZhao      add lock and modify code style
+ * 2024-07-02     KurisaW         sensor mode separation
  *
  */
 
-#ifndef __DHT11_H__
-#define __DHT11_H__
+#ifndef __SENSOR_DALLAS_DHT11_H__
+#define __SENSOR_DALLAS_DHT11_H__
 
 #include <rtthread.h>
-#include "sensor.h"
 
-#define CONNECT_SUCCESS  0
-#define CONNECT_FAILED   1
+#ifdef RT_USING_SENSOR
+
+#if RT_VER_NUM >= 0x50000
+    #define rt_size_t rt_ssize_t
+#endif
+
+#include "drivers/sensor.h"
 
 struct dht11_device
 {
@@ -26,10 +31,8 @@ struct dht11_device
 };
 typedef struct dht11_device *dht11_device_t;
 
-uint8_t dht11_init(rt_base_t pin);
-int32_t dht11_get_temperature(rt_base_t pin);
 int rt_hw_dht11_init(const char *name, struct rt_sensor_config *cfg);
 
-#endif /* __DS18B20_H_ */
+#endif
 
-
+#endif /* __SENSOR_DALLAS_DHT11_H__ */

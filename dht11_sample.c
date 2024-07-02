@@ -1,25 +1,42 @@
 /*
- * Copyright (c) 2006-2018, RT-Thread Development Team
+ * Copyright (c) 2006-2024, RT-Thread Development Team
  *
  * SPDX-License-Identifier: Apache-2.0
  *
  * Change Logs:
- * Date           Author         Notes
+ * Date           Author          Notes
  * 2019-08-01     LuoGong         the first version.
  * 2019-08-15     MurphyZhao      add lock and modify code style
+ * 2024-07-02     KurisaW         sensor mode separation
+ *
  */
 
 #include <rtthread.h>
 #include <rtdevice.h>
-#include "sensor.h"
 #include "sensor_dallas_dht11.h"
-#include "drv_gpio.h"
+#include "rt_hw_dht11.h"
+#include <drv_gpio.h>
 
 /* Modify this pin according to the actual wiring situation */
 #define DHT11_DATA_PIN    GET_PIN(B, 12)
 
 static void read_temp_entry(void *parameter)
 {
+#ifndef RT_USING_SENSOR
+    rt_uint8_t ret;
+    rt_uint8_t humidity, temp;
+
+    while (1)
+    {
+        ret = dht11_read_Data(DHT11_DATA_PIN, &temp, &humidity);
+        if (ret == 0)
+        {
+            rt_kprintf("Temperature: %dC, Humidity: %d%%\n", temp, humidity);
+        }
+
+        rt_thread_mdelay(2000);
+    }
+#else
     rt_device_t dev = RT_NULL;
     struct rt_sensor_data sensor_data;
     rt_size_t res;
@@ -61,6 +78,7 @@ static void read_temp_entry(void *parameter)
 
         rt_thread_delay(1000);
     }
+#endif
 }
 
 static int dht11_read_temp_sample(void)
@@ -84,11 +102,23 @@ INIT_APP_EXPORT(dht11_read_temp_sample);
 
 static int rt_hw_dht11_port(void)
 {
+#ifndef RT_USING_SENSOR
+    rt_uint8_t ret;
+    ret = dht11_init(DHT11_DATA_PIN);
+    if (ret != 0)
+    {
+        rt_kprintf("DHT11 init failed!\n");
+        return 1;
+    }
+    return 0;
+#else
     struct rt_sensor_config cfg;
     
     cfg.intf.user_data = (void *)DHT11_DATA_PIN;
     rt_hw_dht11_init("dht11", &cfg);
 
     return RT_EOK;
+#endif
 }
 INIT_COMPONENT_EXPORT(rt_hw_dht11_port);
+
