@@ -18,12 +18,18 @@
 
 #ifdef RT_USING_SENSOR
 
-#if defined(RT_VERSION_CHECK) && (RTTHREAD_VERSION >= RT_VERSION_CHECK(5, 0, 1))
-    #include "drivers/sensor.h"
-    #define RT_SIZE_TYPE   rt_ssize_t
-#else
-    #include "sensor.h"
-    #define RT_SIZE_TYPE   rt_size_t
+#if defined(RT_VERSION_CHECK)
+    #if (RTTHREAD_VERSION >= RT_VERSION_CHECK(5, 0, 2))
+        #define RT_SIZE_TYPE   rt_ssize_t
+    #else
+        #define RT_SIZE_TYPE   rt_size_t
+    #endif
+
+    #if (RTTHREAD_VERSION >= RT_VERSION_CHECK(5, 1, 0))
+        #include "drivers/sensor.h"
+    #else
+        #include "sensor.h"
+    #endif
 #endif
 
 struct dht11_device
