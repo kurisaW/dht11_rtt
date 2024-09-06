@@ -33,7 +33,7 @@
 #define RT_SENSOR_VENDOR_DALLAS (7u)
 #endif
 
-static rt_size_t dht11_polling_get_data(rt_sensor_t sensor, struct rt_sensor_data *data)
+static RT_SIZE_TYPE dht11_polling_get_data(rt_sensor_t sensor, struct rt_sensor_data *data)
 {
     rt_int32_t temperature_humidity;
     temperature_humidity = dht11_get_temperature((rt_base_t)sensor->config.intf.user_data);
@@ -42,7 +42,7 @@ static rt_size_t dht11_polling_get_data(rt_sensor_t sensor, struct rt_sensor_dat
     return 1;
 }
 
-static rt_size_t dht11_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
+static RT_SIZE_TYPE dht11_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
 {
     RT_ASSERT(buf);
 
