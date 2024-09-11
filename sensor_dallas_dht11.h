@@ -15,6 +15,7 @@
 #define __SENSOR_DALLAS_DHT11_H__
 
 #include <rtthread.h>
+#include <rtdevice.h>
 
 #ifdef RT_USING_SENSOR
 
@@ -23,12 +24,6 @@
         #define RT_SIZE_TYPE   rt_ssize_t
     #else
         #define RT_SIZE_TYPE   rt_size_t
-    #endif
-
-    #if (RTTHREAD_VERSION >= RT_VERSION_CHECK(5, 1, 0))
-        #include "drivers/sensor.h"
-    #else
-        #include "sensor.h"
     #endif
 #endif
 
